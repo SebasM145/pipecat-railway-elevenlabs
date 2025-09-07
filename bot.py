@@ -55,10 +55,9 @@ def build_services():
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
     tts = ElevenLabsTTSService(
-        api_key=os.getenv("ELEVENLABS_API_KEY"),
-        # Si no defines ELEVENLABS_VOICE_ID en Railway, usa Rachel por defecto:
-        voice_id=os.getenv("ELEVENLABS_VOICE_ID", "21m00Tcm4TlvDq8ikWAM"),
-        # Nota: si tu plan no soporta cierto modelo, no pases 'model=...'
+        api_key=os.getenv("ELEVENLABS_API_KEY"),        
+        voice_id=os.getenv("ELEVENLABS_VOICE_ID"),
+        sample_rate=48000,       
     )
 
     llm = OpenAILLMService(api_key=os.getenv("OPENAI_API_KEY"))
@@ -138,6 +137,7 @@ async def bot(runner_args: RunnerArguments):
             audio_in_enabled=True,
             audio_out_enabled=True,
             vad_analyzer=SileroVADAnalyzer(),
+            output_sample_rate=48000,
         ),
         # WebRTC embebido (puede requerir TURN en PaaS)
         "webrtc": lambda: TransportParams(
