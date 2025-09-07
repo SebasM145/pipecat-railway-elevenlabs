@@ -40,7 +40,7 @@ from pipecat.processors.aggregators.openai_llm_context import OpenAILLMContext
 from pipecat.processors.frameworks.rtvi import RTVIConfig, RTVIObserver, RTVIProcessor
 from pipecat.runner.types import RunnerArguments
 from pipecat.runner.utils import create_transport
-from pipecat.services.cartesia.tts import CartesiaTTSService
+from pipecat.services.elevenlabs.tts import ElevenLabsTTSService, InputParams
 from pipecat.services.deepgram.stt import DeepgramSTTService
 from pipecat.services.openai.llm import OpenAILLMService
 from pipecat.transports.base_transport import BaseTransport, TransportParams
@@ -56,9 +56,10 @@ async def run_bot(transport: BaseTransport, runner_args: RunnerArguments):
 
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
-    tts = CartesiaTTSService(
-        api_key=os.getenv("CARTESIA_API_KEY"),
-        voice_id="71a7ad14-091c-4e8e-a314-022ece01c121",  # British Reading Lady
+    tts = ElevenLabsTTSService(
+        api_key=os.getenv("sk_b26ea12b640a73020fc27e42bcb70ca30a821caf21b7c49c"),
+        voice_id="VmejBeYhbrcTPwDniox7",      # <-- reemplaza por el voice_id que quieras
+        model="eleven_turbo_v2_5",           # modelo recomendado de ElevenLabs para tiempo real
     )
 
     llm = OpenAILLMService(api_key=os.getenv("OPENAI_API_KEY"))
