@@ -1,16 +1,28 @@
-FROM dailyco/pipecat-base:latest
+# Imagen base oficial con Python y uv
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm
 
-# Enable bytecode compilation
-ENV UV_COMPILE_BYTECODE=1
+# Instalar dependencias de audio y certificados
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg libsndfile1 ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy from the cache instead of linking since it's a mounted volume
-ENV UV_LINK_MODE=copy
+# Directorio de trabajo
+WORKDIR /app
 
-# Install the project's dependencies using the lockfile and settings
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked --no-install-project --no-dev
+# Copiar definiciones de dependencias primero (para cache)
+COPY pyproject.toml uv.lock* ./
 
-# Copy the application code
-COPY ./bot.py bot.py
+# Instalar dependencias del proyecto
+RUN uv sync --no-dev
+
+# Copiar el resto del código
+COPY . .
+
+# Exponer el puerto que usa el bot (7860 por defecto en quickstart)
+EXPOSE 7860
+
+# Comando de arranque
+CMD ["uv", "run", "bot.py"]
+
+# --- Alternativa si tu bot requiere host/port explícitos ---
+# CMD ["bash", "-lc", "uv run python bot.py --host 0.0.0.0 --port ${PORT:-7860}"]
