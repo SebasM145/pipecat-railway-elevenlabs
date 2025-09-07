@@ -22,7 +22,8 @@ COPY . .
 EXPOSE 7860
 
 # Comando de arranque
-CMD ["bash", "-lc", "uv run python bot.py --host 0.0.0.0 --port ${PORT:-7860}"]
+CMD ["bash", "-lc", "uv run python bot.py --host 0.0.0.0 --port 7860 --transport daily"]
+
 
 
 # --- Alternativa si tu bot requiere host/port explícitos ---
