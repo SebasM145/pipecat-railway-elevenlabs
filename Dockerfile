@@ -22,9 +22,7 @@ COPY . .
 EXPOSE 7860
 
 # Comando de arranque
-CMD ["bash", "-lc", "uv run python bot.py --host 0.0.0.0 --port ${PORT:-8080} --transport daily"]
-
-
+CMD ["bash", "-lc", "uv run python bot.py --host 0.0.0.0 --port $PORT --transport webrtc"]
 
 
 # --- Alternativa si tu bot requiere host/port explícitos ---
